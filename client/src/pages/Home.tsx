@@ -1,5 +1,7 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 /**
  * AERON PARFUM Landing Page
@@ -11,6 +13,7 @@ import { useEffect, useState } from "react";
  */
 
 export default function Home() {
+  const { user, loading, error, isAuthenticated, logout } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function Home() {
           <div className="text-2xl font-bold text-accent" style={{ fontFamily: "'Playfair Display', serif" }}>
             AERON
           </div>
-          <div className="flex gap-8 text-sm">
+          <div className="flex gap-8 text-sm items-center">
             <a href="#product" className="hover:text-accent transition-colors duration-300">
               Product
             </a>
@@ -35,6 +38,17 @@ export default function Home() {
             <a href="#contact" className="hover:text-accent transition-colors duration-300">
               Contact
             </a>
+            {isAuthenticated && user && (
+              <div className="flex gap-4 items-center">
+                <span className="text-xs text-muted-foreground">{user.name}</span>
+                <button
+                  onClick={() => logout()}
+                  className="text-xs px-3 py-1 border border-accent text-accent hover:bg-accent hover:text-white transition-all"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>
@@ -169,21 +183,27 @@ export default function Home() {
 
       {/* CTA Section */}
       <section id="contact" className="py-32 px-4">
-        <div className="max-w-2xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl">
-            Experience Luxury
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Join those who appreciate the finer things. Discover AERON PARFUM and elevate your everyday moments.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <button className="luxury-button">
-              Shop Now
-            </button>
-            <button className="px-8 py-3 border border-muted hover:border-accent text-foreground hover:text-accent transition-all duration-300">
-              Learn More
-            </button>
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div className="text-center space-y-8">
+            <h2 className="text-4xl md:text-5xl">
+              Experience Luxury
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Join those who appreciate the finer things. Discover AERON PARFUM and elevate your everyday moments.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <button className="luxury-button">
+                Shop Now
+              </button>
+              <button className="px-8 py-3 border border-muted hover:border-accent text-foreground hover:text-accent transition-all duration-300">
+                Learn More
+              </button>
+            </div>
           </div>
+
+          {/* Newsletter Signup */}
+          <div className="section-divider my-8"></div>
+          <NewsletterSignup />
         </div>
       </section>
 

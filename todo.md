@@ -1,0 +1,29 @@
+# AERON PARFUM Website TODO
+
+## Frontend - Completed
+- [x] Basic homepage layout with hero section
+- [x] Navigation menu
+- [x] Product showcase section
+- [x] About section
+- [x] Call-to-action section
+- [x] Footer with links
+- [x] Quiet Luxury design system (colors, typography, spacing)
+- [x] Responsive design
+
+## Database & Backend - Completed
+- [x] Create database schema (products, reviews, newsletter subscribers)
+- [x] Create API endpoints for products (list, get, create, update, delete)
+- [x] Create API endpoints for reviews (list, create, delete)
+- [x] Create API endpoint for newsletter signup
+- [x] Integrate newsletter signup form
+- [ ] Integrate product listing from database
+- [ ] Integrate review system on product pages
+
+## Features to Add
+- [ ] Product gallery page with database integration
+- [ ] Customer reviews and ratings system
+- [ ] Newsletter email subscription
+- [ ] Admin panel for product management
+- [ ] User authentication and profiles
+- [ ] Shopping cart functionality
+- [ ] Order management system

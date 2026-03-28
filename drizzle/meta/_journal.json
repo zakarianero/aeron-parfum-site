@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774736260306,
+      "tag": "0000_supreme_talon",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774736331229,
+      "tag": "0001_cooing_butterfly",
+      "breakpoints": true
+    }
+  ]
+}
