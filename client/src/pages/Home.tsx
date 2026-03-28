@@ -59,7 +59,7 @@ export default function Home() {
           {/* Hero Image */}
           <div className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663488572922/NY6Sgf7RkuGqRky5rHN6dU/aeron-hero-R52ALiZHcMJke7m8WWV6GB.webp"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663488572922/NY6Sgf7RkuGqRky5rHN6dU/42935f50-2af3-11f1-a72d-114ecf2834b5_0660daac.png"
               alt="AERON PARFUM 30ml"
               className="product-image w-full"
             />
@@ -137,7 +137,7 @@ export default function Home() {
             {/* Image - Right Side */}
             <div className="order-1 lg:order-2">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663488572922/NY6Sgf7RkuGqRky5rHN6dU/aeron-hero-R52ALiZHcMJke7m8WWV6GB.webp"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663488572922/NY6Sgf7RkuGqRky5rHN6dU/42935f50-2af3-11f1-a72d-114ecf2834b5_0660daac.png"
                 alt="AERON PARFUM Details"
                 className="product-image w-full"
               />
