@@ -36,6 +36,13 @@ export const products = mysqlTable("products", {
   volume: varchar("volume", { length: 50 }).notNull(), // e.g., "30ml", "50ml"
   imageUrl: text("imageUrl"),
   notes: text("notes"), // Fragrance notes (top, middle, base)
+  topNotes: text("topNotes"),
+  heartNotes: text("heartNotes"),
+  baseNotes: text("baseNotes"),
+  scentType: varchar("scentType", { length: 100 }), // e.g., "Woody Aromatic", "Gourmand"
+  longevity: varchar("longevity", { length: 100 }), // e.g., "4-6 hrs", "8-12+ hrs"
+  season: varchar("season", { length: 100 }), // e.g., "Spring/Summer"
+  occasion: varchar("occasion", { length: 100 }), // e.g., "Evening", "Day & Night"
   category: mysqlEnum("category", ["womens", "mens", "unisex"]).notNull().default("womens"),
   isAvailable: boolean("isAvailable").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
