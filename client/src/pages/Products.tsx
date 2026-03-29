@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
 import { useLocation } from "wouter";
 
 type Category = "womens" | "mens" | "unisex";
 
+interface ProductWithVariants {
+  product: any;
+  variants: any[];
+}
+
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [productsWithVariants, setProductsWithVariants] = useState<ProductWithVariants[]>([]);
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
 
@@ -17,10 +23,35 @@ export default function Products() {
     { enabled: true }
   );
 
-  // Fetch variants for each product
-  const variantsQueries = products?.map((product) =>
-    trpc.products.variants.useQuery({ productId: product.id })
-  ) || [];
+  // Fetch all variants when products change
+  useEffect(() => {
+    const fetchVariants = async () => {
+      if (!products || products.length === 0) {
+        setProductsWithVariants([]);
+        return;
+      }
+
+      try {
+        const productsData = await Promise.all(
+          products.map(async (product) => {
+            try {
+              const variantsData = await fetch(`/api/trpc/products.variants?input=${encodeURIComponent(JSON.stringify({ productId: product.id }))}`).then(r => r.json()); const variants = variantsData.result?.data || [];
+              return { product, variants };
+            } catch (error) {
+              console.error(`Failed to fetch variants for product ${product.id}:`, error);
+              return { product, variants: [] };
+            }
+          })
+        );
+        setProductsWithVariants(productsData);
+      } catch (error) {
+        console.error("Failed to fetch variants:", error);
+        setProductsWithVariants(products.map((p) => ({ product: p, variants: [] })));
+      }
+    };
+
+    fetchVariants();
+  }, [products]);
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -133,9 +164,8 @@ export default function Products() {
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
-            ) : products && products.length > 0 ? (
-              products.map((product, index) => {
-                const variants = variantsQueries[index]?.data || [];
+            ) : productsWithVariants && productsWithVariants.length > 0 ? (
+              productsWithVariants.map(({ product, variants }) => {
                 const selectedSize = selectedSizes[product.id] || (variants[0]?.size || "");
                 const selectedVariant = variants.find((v) => v.size === selectedSize);
                 const quantity = quantities[product.id] || 1;
