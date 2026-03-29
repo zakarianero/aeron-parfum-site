@@ -36,7 +36,7 @@ export const products = mysqlTable("products", {
   volume: varchar("volume", { length: 50 }).notNull(), // e.g., "30ml", "50ml"
   imageUrl: text("imageUrl"),
   notes: text("notes"), // Fragrance notes (top, middle, base)
-  category: mysqlEnum("category", ["womens", "mens"]).notNull().default("womens"),
+  category: mysqlEnum("category", ["womens", "mens", "unisex"]).notNull().default("womens"),
   isAvailable: boolean("isAvailable").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

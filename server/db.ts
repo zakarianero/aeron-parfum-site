@@ -96,7 +96,7 @@ export async function getAllProducts() {
   return await db.select().from(products).orderBy(products.createdAt);
 }
 
-export async function getProductsByCategory(category: 'womens' | 'mens') {
+export async function getProductsByCategory(category: 'womens' | 'mens' | 'unisex') {
   const db = await getDb();
   if (!db) return [];
   return await db.select().from(products).where(eq(products.category, category)).orderBy(products.createdAt);

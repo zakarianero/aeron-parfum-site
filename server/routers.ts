@@ -24,7 +24,7 @@ export const appRouter = router({
     list: publicProcedure.query(async () => {
       return await getAllProducts();
     }),
-    byCategory: publicProcedure.input(z.object({ category: z.enum(['womens', 'mens']) })).query(async ({ input }) => {
+    byCategory: publicProcedure.input(z.object({ category: z.enum(['womens', 'mens', 'unisex']) })).query(async ({ input }) => {
       return await getProductsByCategory(input.category);
     }),
     get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
@@ -38,7 +38,7 @@ export const appRouter = router({
         volume: z.string(),
         imageUrl: z.string().optional(),
         notes: z.string().optional(),
-        category: z.enum(['womens', 'mens']).default('womens'),
+        category: z.enum(['womens', 'mens', 'unisex']).default('womens'),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== 'admin') {

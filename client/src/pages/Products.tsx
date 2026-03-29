@@ -2,7 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 
-type Category = "womens" | "mens";
+type Category = "womens" | "mens" | "unisex";
 
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
@@ -26,7 +26,7 @@ export default function Products() {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex justify-center gap-6 mb-12">
+        <div className="flex justify-center gap-6 mb-12 flex-wrap">
           <button
             onClick={() => setActiveCategory("womens")}
             className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
@@ -46,6 +46,16 @@ export default function Products() {
             }`}
           >
             Men's
+          </button>
+          <button
+            onClick={() => setActiveCategory("unisex")}
+            className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
+              activeCategory === "unisex"
+                ? "text-accent border-b-2 border-accent"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Unisex
           </button>
         </div>
 

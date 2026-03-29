@@ -1,0 +1,1 @@
+ALTER TABLE `products` MODIFY COLUMN `category` enum('womens','mens','unisex') NOT NULL DEFAULT 'womens';
