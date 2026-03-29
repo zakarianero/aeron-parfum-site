@@ -106,13 +106,20 @@ export default function Products() {
                     </p>
                   )}
 
-                  <div className="flex justify-between items-center pt-4">
-                    <span className="text-2xl font-bold text-accent">
-                      ${product.price}
-                    </span>
-                    <button className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300">
-                      Add to Cart
-                    </button>
+                  <div className="space-y-3 pt-4">
+                    {product.name === 'Bianco Latte' && (
+                      <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
+                        🚚 Livraison Gratuite
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-2xl font-bold text-accent">
+                        {product.price} DH
+                      </span>
+                      <button className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300">
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
