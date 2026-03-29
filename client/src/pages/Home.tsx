@@ -29,6 +29,9 @@ export default function Home() {
             AERON
           </div>
           <div className="flex gap-8 text-sm items-center">
+            <a href="/products" className="hover:text-accent transition-colors duration-300">
+              Shop
+            </a>
             <a href="#product" className="hover:text-accent transition-colors duration-300">
               Product
             </a>

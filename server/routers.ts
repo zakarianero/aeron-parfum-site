@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { getAllProducts, getProductById, createProduct, subscribeToNewsletter, getProductReviews, createReview } from "./db";
+import { getAllProducts, getProductById, createProduct, subscribeToNewsletter, getProductReviews, createReview, getProductsByCategory } from "./db";
 import { InsertProduct, InsertReview } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -24,6 +24,9 @@ export const appRouter = router({
     list: publicProcedure.query(async () => {
       return await getAllProducts();
     }),
+    byCategory: publicProcedure.input(z.object({ category: z.enum(['womens', 'mens']) })).query(async ({ input }) => {
+      return await getProductsByCategory(input.category);
+    }),
     get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
       return await getProductById(input.id);
     }),
@@ -35,6 +38,7 @@ export const appRouter = router({
         volume: z.string(),
         imageUrl: z.string().optional(),
         notes: z.string().optional(),
+        category: z.enum(['womens', 'mens']).default('womens'),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== 'admin') {
@@ -47,6 +51,7 @@ export const appRouter = router({
           volume: input.volume,
           imageUrl: input.imageUrl,
           notes: input.notes,
+          category: input.category,
         };
         return await createProduct(product);
       }),

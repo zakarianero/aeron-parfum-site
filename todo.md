@@ -27,3 +27,10 @@
 - [ ] User authentication and profiles
 - [ ] Shopping cart functionality
 - [ ] Order management system
+
+## Product Categories - Completed
+- [x] Add category field to products table (Women's/Men's)
+- [x] Create API endpoints for filtering products by category
+- [x] Build products page with category tabs/filters
+- [x] Display products organized by gender category
+- [x] Add category selection in admin product creation

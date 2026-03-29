@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `category` enum('womens','mens') DEFAULT 'womens' NOT NULL;

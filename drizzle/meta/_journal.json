@@ -15,6 +15,13 @@
       "when": 1774736331229,
       "tag": "0001_cooing_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774784339446,
+      "tag": "0002_equal_bishop",
+      "breakpoints": true
     }
   ]
 }
