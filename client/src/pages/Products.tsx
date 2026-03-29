@@ -107,11 +107,9 @@ export default function Products() {
                   )}
 
                   <div className="space-y-3 pt-4">
-                    {product.name === 'Bianco Latte' && (
-                      <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
-                        🚚 Livraison Gratuite
-                      </div>
-                    )}
+                    <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
+                      🚚 Livraison Gratuite
+                    </div>
                     <div className="flex justify-between items-center">
                       <span className="text-2xl font-bold text-accent">
                         {product.price} DH
