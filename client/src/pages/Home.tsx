@@ -25,9 +25,9 @@ export default function Home() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="container py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-accent" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <a href="/" className="text-2xl font-bold text-accent hover:opacity-80 transition-opacity duration-300" style={{ fontFamily: "'Playfair Display', serif" }}>
             AERON
-          </div>
+          </a>
           <div className="flex gap-8 text-sm items-center">
             <a href="/products" className="hover:text-accent transition-colors duration-300">
               Shop
