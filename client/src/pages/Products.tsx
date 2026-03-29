@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { useLocation } from "wouter";
 
 type Category = "womens" | "mens" | "unisex";
 
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const { addItem } = useCart();
+  const [, setLocation] = useLocation();
 
   const { data: products, isLoading } = trpc.products.byCategory.useQuery(
     { category: activeCategory },
@@ -25,6 +29,32 @@ export default function Products() {
     }));
   };
 
+  const handleQuantityChange = (productId: number, quantity: number) => {
+    if (quantity > 0) {
+      setQuantities((prev) => ({
+        ...prev,
+        [productId]: quantity,
+      }));
+    }
+  };
+
+  const handleAddToCart = (product: any, selectedSize: string, selectedVariant: any) => {
+    const quantity = quantities[product.id] || 1;
+    addItem({
+      productId: product.id,
+      productName: product.name,
+      size: selectedSize,
+      price: parseFloat(selectedVariant.price),
+      quantity,
+      imageUrl: product.imageUrl,
+    });
+    // Reset quantity after adding
+    setQuantities((prev) => ({
+      ...prev,
+      [product.id]: 1,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
@@ -40,6 +70,12 @@ export default function Products() {
             <a href="/products" className="hover:text-accent transition-colors duration-300 font-semibold text-accent">
               Shop
             </a>
+            <button 
+              onClick={() => setLocation("/cart")}
+              className="hover:text-accent transition-colors duration-300 font-semibold"
+            >
+              🛒 Cart
+            </button>
           </div>
         </div>
       </nav>
@@ -102,6 +138,7 @@ export default function Products() {
                 const variants = variantsQueries[index]?.data || [];
                 const selectedSize = selectedSizes[product.id] || (variants[0]?.size || "");
                 const selectedVariant = variants.find((v) => v.size === selectedSize);
+                const quantity = quantities[product.id] || 1;
 
                 return (
                   <div
@@ -161,6 +198,28 @@ export default function Products() {
                         </div>
                       )}
 
+                      {/* Quantity Selector */}
+                      <div className="space-y-2 pt-2">
+                        <p className="text-xs font-semibold text-muted-foreground">Quantity:</p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleQuantityChange(product.id, quantity - 1)}
+                            className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+                          >
+                            −
+                          </button>
+                          <span className="px-4 py-1 bg-secondary/50 rounded text-sm font-semibold w-12 text-center">
+                            {quantity}
+                          </span>
+                          <button
+                            onClick={() => handleQuantityChange(product.id, quantity + 1)}
+                            className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
                       {/* Price and CTA */}
                       <div className="space-y-3 pt-4">
                         <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
@@ -170,7 +229,10 @@ export default function Products() {
                           <span className="text-2xl font-bold text-accent">
                             {selectedVariant ? `${selectedVariant.price} DH` : "N/A"}
                           </span>
-                          <button className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300">
+                          <button 
+                            onClick={() => handleAddToCart(product, selectedSize, selectedVariant)}
+                            className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300"
+                          >
                             Add to Cart
                           </button>
                         </div>
