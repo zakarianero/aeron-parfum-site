@@ -131,7 +131,7 @@ export default function Home() {
                     Lasting Impression
                   </h3>
                   <p className="text-muted-foreground">
-                    A 30ml bottle of pure sophistication. Long-lasting fragrance that evolves throughout the day, leaving a subtle yet unforgettable trace.
+                    Available in 30ml and 50ml sizes of pure sophistication. Long-lasting fragrance that evolves throughout the day, leaving a subtle yet unforgettable trace.
                   </p>
                 </div>
               </div>
@@ -170,8 +170,8 @@ export default function Home() {
               <p className="text-muted-foreground">Premium Quality Ingredients</p>
             </div>
             <div className="space-y-4">
-              <div className="text-4xl font-bold text-accent">30ml</div>
-              <p className="text-muted-foreground">Perfect Size for Luxury</p>
+              <div className="text-4xl font-bold text-accent">30ml & 50ml</div>
+              <p className="text-muted-foreground">Perfect Sizes for Luxury</p>
             </div>
             <div className="space-y-4">
               <div className="text-4xl font-bold text-accent">∞</div>
