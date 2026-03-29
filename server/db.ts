@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, reviews, newsletterSubscribers, InsertProduct, InsertReview, InsertNewsletterSubscriber } from "../drizzle/schema";
+import { InsertUser, users, products, reviews, newsletterSubscribers, productVariants, InsertProduct, InsertReview, InsertNewsletterSubscriber, InsertProductVariant } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -158,5 +158,26 @@ export async function createReview(review: InsertReview) {
   } catch (error) {
     console.error("[Database] Failed to create review:", error);
     return false;
+  }
+}
+
+
+export async function getProductVariants(productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(productVariants).where(eq(productVariants.productId, productId)).orderBy(productVariants.size);
+}
+
+export async function createProductVariant(variant: InsertProductVariant) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create variant: database not available");
+    return;
+  }
+  try {
+    await db.insert(productVariants).values(variant);
+  } catch (error) {
+    console.error("[Database] Failed to create variant:", error);
+    throw error;
   }
 }

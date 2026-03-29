@@ -46,6 +46,22 @@ export type Product = typeof products.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
 
 /**
+ * Product variants table for different sizes
+ */
+export const productVariants = mysqlTable("productVariants", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull().references(() => products.id, { onDelete: "cascade" }),
+  size: varchar("size", { length: 50 }).notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  isAvailable: boolean("isAvailable").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProductVariant = typeof productVariants.$inferSelect;
+export type InsertProductVariant = typeof productVariants.$inferInsert;
+
+/**
  * Reviews table for customer feedback
  */
 export const reviews = mysqlTable("reviews", {

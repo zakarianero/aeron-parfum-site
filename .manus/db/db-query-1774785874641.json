@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `productVariants` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`productId` int NOT NULL,\n\t`size` varchar(50) NOT NULL,\n\t`price` decimal(10,2) NOT NULL,\n\t`isAvailable` boolean NOT NULL DEFAULT true,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `productVariants_id` PRIMARY KEY(`id`)\n);\nALTER TABLE `productVariants` ADD CONSTRAINT `productVariants_productId_products_fk` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE cascade ON UPDATE no action;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qHwjk4DbUD3gEX.root --database NY6Sgf7RkuGqRky5rHN6dU --execute CREATE TABLE `productVariants` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`productId` int NOT NULL,\n\t`size` varchar(50) NOT NULL,\n\t`price` decimal(10,2) NOT NULL,\n\t`isAvailable` boolean NOT NULL DEFAULT true,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `productVariants_id` PRIMARY KEY(`id`)\n);\nALTER TABLE `productVariants` ADD CONSTRAINT `productVariants_productId_products_fk` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE cascade ON UPDATE no action;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 808
+}

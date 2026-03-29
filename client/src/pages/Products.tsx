@@ -6,11 +6,24 @@ type Category = "womens" | "mens" | "unisex";
 
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
+  const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
 
   const { data: products, isLoading } = trpc.products.byCategory.useQuery(
     { category: activeCategory },
     { enabled: true }
   );
+
+  // Fetch variants for each product
+  const variantsQueries = products?.map((product) =>
+    trpc.products.variants.useQuery({ productId: product.id })
+  ) || [];
+
+  const handleSizeSelect = (productId: number, size: string) => {
+    setSelectedSizes((prev) => ({
+      ...prev,
+      [productId]: size,
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -85,62 +98,87 @@ export default function Products() {
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
             ) : products && products.length > 0 ? (
-              products.map((product) => (
-                <div
-                  key={product.id}
-                  className="group cursor-pointer transition-all duration-300 hover:opacity-80"
-                >
-                  {/* Product Image */}
-                  <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
-                    {product.imageUrl ? (
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="text-muted-foreground">No image</div>
-                    )}
-                  </div>
+              products.map((product, index) => {
+                const variants = variantsQueries[index]?.data || [];
+                const selectedSize = selectedSizes[product.id] || (variants[0]?.size || "");
+                const selectedVariant = variants.find((v) => v.size === selectedSize);
 
-                  {/* Product Info */}
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      {product.name}
-                    </h3>
+                return (
+                  <div
+                    key={product.id}
+                    className="group cursor-pointer transition-all duration-300 hover:opacity-80"
+                  >
+                    {/* Product Image */}
+                    <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+                      {product.imageUrl ? (
+                        <img
+                          src={product.imageUrl}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-muted-foreground">No image</div>
+                      )}
+                    </div>
 
-                    {product.volume && (
-                      <p className="text-sm text-muted-foreground">{product.volume}</p>
-                    )}
+                    {/* Product Info */}
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {product.name}
+                      </h3>
 
-                    {product.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
+                      {product.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {product.description}
+                        </p>
+                      )}
 
-                    {product.notes && (
-                      <p className="text-xs text-accent italic">
-                        Notes: {product.notes}
-                      </p>
-                    )}
+                      {product.notes && (
+                        <p className="text-xs text-accent italic">
+                          Notes: {product.notes}
+                        </p>
+                      )}
 
-                    <div className="space-y-3 pt-4">
-                      <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
-                        🚚 Livraison Gratuite
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-2xl font-bold text-accent">
-                          {product.price} DH
-                        </span>
-                        <button className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300">
-                          Add to Cart
-                        </button>
+                      {/* Size Selection */}
+                      {variants.length > 0 && (
+                        <div className="space-y-2 pt-2">
+                          <p className="text-xs font-semibold text-muted-foreground">Select Size:</p>
+                          <div className="flex gap-2">
+                            {variants.map((variant) => (
+                              <button
+                                key={variant.id}
+                                onClick={() => handleSizeSelect(product.id, variant.size)}
+                                className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
+                                  selectedSize === variant.size
+                                    ? "bg-accent text-white"
+                                    : "bg-secondary text-foreground hover:bg-secondary/80"
+                                }`}
+                              >
+                                {variant.size}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Price and CTA */}
+                      <div className="space-y-3 pt-4">
+                        <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
+                          🚚 Livraison Gratuite
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-2xl font-bold text-accent">
+                            {selectedVariant ? `${selectedVariant.price} DH` : "N/A"}
+                          </span>
+                          <button className="px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300">
+                            Add to Cart
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground text-lg">

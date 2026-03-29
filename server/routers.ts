@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { getAllProducts, getProductById, createProduct, subscribeToNewsletter, getProductReviews, createReview, getProductsByCategory } from "./db";
+import { getAllProducts, getProductById, createProduct, subscribeToNewsletter, getProductReviews, createReview, getProductsByCategory, getProductVariants } from "./db";
 import { InsertProduct, InsertReview } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -29,6 +29,9 @@ export const appRouter = router({
     }),
     get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
       return await getProductById(input.id);
+    }),
+    variants: publicProcedure.input(z.object({ productId: z.number() })).query(async ({ input }) => {
+      return await getProductVariants(input.productId);
     }),
     create: protectedProcedure
       .input(z.object({

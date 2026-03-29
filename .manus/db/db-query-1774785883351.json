@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO `productVariants` (productId, size, price, isAvailable) \nSELECT id, '30ml', CAST(CAST(price AS DECIMAL(10,2)) * 0.75 AS DECIMAL(10,2)), true FROM products\nUNION ALL\nSELECT id, '50ml', price, true FROM products;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qHwjk4DbUD3gEX.root --database NY6Sgf7RkuGqRky5rHN6dU --execute INSERT INTO `productVariants` (productId, size, price, isAvailable) \nSELECT id, '30ml', CAST(CAST(price AS DECIMAL(10,2)) * 0.75 AS DECIMAL(10,2)), true FROM products\nUNION ALL\nSELECT id, '50ml', price, true FROM products;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 377
+}

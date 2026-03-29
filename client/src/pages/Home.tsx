@@ -63,7 +63,7 @@ export default function Home() {
           <div className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <img
               src="https://d2xsxph8kpxj0f.cloudfront.net/310519663488572922/NY6Sgf7RkuGqRky5rHN6dU/42935f50-2af3-11f1-a72d-114ecf2834b5_0660daac.png"
-              alt="AERON PARFUM 30ml"
+              alt="AERON PARFUM - Available in 30ml and 50ml"
               className="product-image w-full"
             />
           </div>
@@ -81,7 +81,7 @@ export default function Home() {
               </div>
 
               <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-                AERON PARFUM embodies refined elegance and timeless sophistication. Each 30ml bottle is a testament to the art of perfumery, crafted for those who appreciate the finer things in life.
+                AERON PARFUM embodies refined elegance and timeless sophistication. Available in both 30ml and 50ml sizes, each bottle is a testament to the art of perfumery, crafted for those who appreciate the finer things in life.
               </p>
 
               <div className="pt-4">
