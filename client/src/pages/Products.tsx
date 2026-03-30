@@ -70,6 +70,15 @@ export default function Products() {
   };
 
   const handleAddToCart = (product: any, selectedSize: string, selectedVariant: any) => {
+    if (!selectedSize) {
+      alert('Please select a size before adding to cart');
+      return;
+    }
+    if (!selectedVariant) {
+      alert('Please select a valid size option');
+      return;
+    }
+    
     const quantity = quantities[product.id] || 1;
     addItem({
       productId: product.id,
@@ -77,13 +86,17 @@ export default function Products() {
       size: selectedSize,
       price: parseFloat(selectedVariant.price),
       quantity,
-      imageUrl: product.imageUrl,
+      imageUrl: product.imageUrl || '',
     });
+    
     // Reset quantity after adding
     setQuantities((prev) => ({
       ...prev,
       [product.id]: 1,
     }));
+    
+    // Redirect to cart page
+    setLocation('/cart');
   };
 
   return (
