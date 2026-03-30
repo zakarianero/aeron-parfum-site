@@ -206,6 +206,14 @@ export default function ProductDetail() {
                 )}
               </div>
 
+              {/* Price Display */}
+              {selectedVariant && (
+                <div className="bg-accent/10 rounded-lg p-6 space-y-2">
+                  <p className="text-sm font-semibold text-muted-foreground">Price</p>
+                  <p className="text-4xl font-bold text-accent">{selectedVariant.price} DH</p>
+                </div>
+              )}
+
               {/* Size Selection */}
               {variants.length > 0 && (
                 <div className="space-y-3">
@@ -227,6 +235,7 @@ export default function ProductDetail() {
                   </div>
                 </div>
               )}
+
 
               {/* Quantity */}
               <div className="space-y-3">

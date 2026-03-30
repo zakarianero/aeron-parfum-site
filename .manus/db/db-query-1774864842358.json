@@ -1,0 +1,59 @@
+{
+  "query": "SELECT p.id, p.name, p.category, pv.size, pv.price FROM products p LEFT JOIN productVariants pv ON p.id = pv.productId ORDER BY p.id, pv.size;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qHwjk4DbUD3gEX.root --database NY6Sgf7RkuGqRky5rHN6dU --execute SELECT p.id, p.name, p.category, pv.size, pv.price FROM products p LEFT JOIN productVariants pv ON p.id = pv.productId ORDER BY p.id, pv.size;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Bianco Latte",
+      "category": "unisex",
+      "size": "30ml",
+      "price": "60.00"
+    },
+    {
+      "id": "1",
+      "name": "Bianco Latte",
+      "category": "unisex",
+      "size": "50ml",
+      "price": "80.00"
+    },
+    {
+      "id": "2",
+      "name": "Lacoste Noir",
+      "category": "mens",
+      "size": "30ml",
+      "price": "60.00"
+    },
+    {
+      "id": "2",
+      "name": "Lacoste Noir",
+      "category": "mens",
+      "size": "50ml",
+      "price": "80.00"
+    },
+    {
+      "id": "3",
+      "name": "Baccarat Rouge 540",
+      "category": "womens",
+      "size": "NULL",
+      "price": "NULL"
+    },
+    {
+      "id": "4",
+      "name": "Delina",
+      "category": "womens",
+      "size": "NULL",
+      "price": "NULL"
+    },
+    {
+      "id": "5",
+      "name": "Black Opium",
+      "category": "womens",
+      "size": "NULL",
+      "price": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcategory\tsize\tprice\n1\tBianco Latte\tunisex\t30ml\t60.00\n1\tBianco Latte\tunisex\t50ml\t80.00\n2\tLacoste Noir\tmens\t30ml\t60.00\n2\tLacoste Noir\tmens\t50ml\t80.00\n3\tBaccarat Rouge 540\twomens\tNULL\tNULL\n4\tDelina\twomens\tNULL\tNULL\n5\tBlack Opium\twomens\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 385
+}
