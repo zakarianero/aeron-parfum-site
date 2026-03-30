@@ -136,6 +136,12 @@ export default function Products() {
               Discover AERON PARFUM's exquisite fragrances, carefully curated for those who appreciate luxury.
             </p>
           </div>
+            <div className="bg-accent/10 border border-accent/30 rounded-lg p-3 max-w-2xl mx-auto mt-4">
+              <p className="text-sm font-semibold text-accent">📍 Morocco Delivery Only</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                We currently deliver to Morocco only. Free shipping on all orders.
+              </p>
+            </div>
 
           {/* Category Tabs */}
           <div className="flex justify-center gap-6 mb-12 flex-wrap">

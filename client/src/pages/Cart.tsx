@@ -192,6 +192,14 @@ export default function Cart() {
                   </button>
                 </div>
 
+                {/* Morocco Only Notice */}
+                <div className="border border-accent/30 rounded-lg p-4 bg-accent/5">
+                  <p className="text-sm font-semibold text-accent mb-2">📍 Morocco Delivery Only</p>
+                  <p className="text-sm text-muted-foreground">
+                    AERON PARFUM products are currently available for delivery within Morocco only. Free delivery is included for all orders.
+                  </p>
+                </div>
+
                 {/* Checkout Form */}
                 {isCheckoutOpen && (
                   <div className="border border-border rounded-lg p-6 space-y-4 bg-secondary/5">

@@ -233,9 +233,9 @@ export default function Home() {
             <div>
               <h4 className="font-bold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-accent transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Sustainability</a></li>
+                <li><a href="/about" className="hover:text-accent transition-colors">About Us</a></li>
+                <li><a href="/contact" className="hover:text-accent transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-accent transition-colors">Shipping Info</a></li>
               </ul>
             </div>
             <div>
@@ -249,6 +249,13 @@ export default function Home() {
           </div>
 
           <div className="section-divider mb-8"></div>
+
+          <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 mb-8">
+            <p className="text-sm font-semibold text-accent mb-2">📍 Morocco Delivery Only</p>
+            <p className="text-xs text-muted-foreground">
+              AERON PARFUM products are currently available for delivery within Morocco only. Free shipping on all orders.
+            </p>
+          </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <p>&copy; 2026 AERON PARFUM. All rights reserved.</p>
