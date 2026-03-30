@@ -250,14 +250,22 @@ export default function Products() {
                         </div>
                       </div>
 
-                      {/* Price and CTA */}
-                      <div className="space-y-3 pt-4">
-                        <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block">
-                          🚚 Livraison Gratuite
-                        </div>
+                      {/* Price Display */}
+                      <div className="bg-accent/10 rounded-lg p-3 mb-3">
+                        <p className="text-xs font-semibold text-muted-foreground mb-1">Price (50ml)</p>
+                        <p className="text-3xl font-bold text-accent">80 DH</p>
+                      </div>
+
+                      {/* Free Delivery */}
+                      <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block mb-3">
+                        🚚 Livraison Gratuite
+                      </div>
+
+                      {/* Size and CTA */}
+                      <div className="space-y-3 pt-2">
                         <div className="flex justify-between items-center">
-                          <span className="text-2xl font-bold text-accent">
-                            {selectedVariant ? `${selectedVariant.price} DH` : "N/A"}
+                          <span className="text-sm text-muted-foreground">
+                            {selectedVariant ? `Selected: ${selectedVariant.size}` : "Select size"}
                           </span>
                           <button 
                             onClick={() => handleAddToCart(product, selectedSize, selectedVariant)}
