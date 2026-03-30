@@ -85,9 +85,9 @@ export default function Home() {
               </p>
 
               <div className="pt-4">
-                <button className="luxury-button">
+                <a href="/products" className="luxury-button inline-block">
                   Explore Collection
-                </button>
+                </a>
               </div>
             </div>
           </div>
