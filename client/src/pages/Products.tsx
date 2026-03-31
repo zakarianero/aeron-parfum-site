@@ -10,6 +10,7 @@ export default function Products() {
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
   const [allVariants, setAllVariants] = useState<{ [key: number]: any[] }>({});
+  const [isInitialized, setIsInitialized] = useState(false);
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
 
@@ -18,15 +19,18 @@ export default function Products() {
     { enabled: true }
   );
 
-  // Fetch variants for all products
+  // Fetch variants for all products and auto-select first size
   useEffect(() => {
     const fetchAllVariants = async () => {
       if (!products || products.length === 0) {
         setAllVariants({});
+        setSelectedSizes({});
+        setIsInitialized(true);
         return;
       }
 
       const variantsMap: { [key: number]: any[] } = {};
+      const newSelectedSizes: { [key: number]: string } = {};
 
       for (const product of products) {
         try {
@@ -41,12 +45,9 @@ export default function Products() {
           const variants = data.result?.data || [];
           variantsMap[product.id] = Array.isArray(variants) ? variants : [];
           
-          // Auto-select first size
-          if (variants.length > 0 && !selectedSizes[product.id]) {
-            setSelectedSizes((prev) => ({
-              ...prev,
-              [product.id]: variants[0].size,
-            }));
+          // Auto-select first size for each product
+          if (variants.length > 0) {
+            newSelectedSizes[product.id] = variants[0].size;
           }
         } catch (error) {
           console.error(`Failed to fetch variants for product ${product.id}:`, error);
@@ -55,6 +56,8 @@ export default function Products() {
       }
 
       setAllVariants(variantsMap);
+      setSelectedSizes(newSelectedSizes);
+      setIsInitialized(true);
     };
 
     fetchAllVariants();
@@ -196,14 +199,14 @@ export default function Products() {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {isLoading ? (
+            {isLoading || !isInitialized ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
             ) : products && products.length > 0 ? (
               products.map((product) => {
                 const variants = allVariants[product.id] || [];
-                const selectedSize = selectedSizes[product.id] || (variants[0]?.size || "");
+                const selectedSize = selectedSizes[product.id] || "";
                 const selectedVariant = variants.find((v) => v.size === selectedSize);
                 const quantity = quantities[product.id] || 1;
 
@@ -289,10 +292,10 @@ export default function Products() {
                       {/* Price Display */}
                       <div className="bg-accent/10 rounded-lg p-3 mb-3">
                         <p className="text-xs font-semibold text-muted-foreground mb-1">
-                          Price ({selectedSize || "50ml"})
+                          Price ({selectedSize || "Select size"})
                         </p>
                         <p className="text-3xl font-bold text-accent">
-                          {selectedVariant ? `${selectedVariant.price} DH` : "80 DH"}
+                          {selectedVariant ? `${selectedVariant.price} DH` : "—"}
                         </p>
                       </div>
 
