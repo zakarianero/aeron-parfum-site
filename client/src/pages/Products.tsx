@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
 import { useLocation } from "wouter";
@@ -9,50 +9,13 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-  const [allVariants, setAllVariants] = useState<{ [key: number]: any[] }>({});
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
-  const utils = trpc.useUtils();
 
   const { data: products, isLoading } = trpc.products.byCategory.useQuery(
     { category: activeCategory },
     { enabled: true }
   );
-
-  // Fetch variants for all products and auto-select first size
-  useEffect(() => {
-    const fetchAllVariants = async () => {
-      if (!products || products.length === 0) {
-        setAllVariants({});
-        setSelectedSizes({});
-        return;
-      }
-
-      const variantsMap: { [key: number]: any[] } = {};
-      const newSelectedSizes: { [key: number]: string } = {};
-
-      for (const product of products) {
-        try {
-          // Use the utils to fetch data directly
-          const variants = await utils.products.variants.fetch({ productId: product.id });
-          variantsMap[product.id] = Array.isArray(variants) ? variants : [];
-          
-          // Auto-select first size for each product
-          if (variants && variants.length > 0) {
-            newSelectedSizes[product.id] = variants[0].size;
-          }
-        } catch (error) {
-          console.error(`Failed to fetch variants for product ${product.id}:`, error);
-          variantsMap[product.id] = [];
-        }
-      }
-
-      setAllVariants(variantsMap);
-      setSelectedSizes(newSelectedSizes);
-    };
-
-    fetchAllVariants();
-  }, [products, utils]);
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -195,117 +158,17 @@ export default function Products() {
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
             ) : products && products.length > 0 ? (
-              products.map((product) => {
-                const variants = allVariants[product.id] || [];
-                const selectedSize = selectedSizes[product.id] || "";
-                const selectedVariant = variants.find((v) => v.size === selectedSize);
-                const quantity = quantities[product.id] || 1;
-
-                return (
-                  <div
-                    key={product.id}
-                    className="group cursor-pointer transition-all duration-300 hover:opacity-80"
-                  >
-                    {/* Product Image */}
-                    <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
-                      {product.imageUrl ? (
-                        <img
-                          src={product.imageUrl}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="text-muted-foreground">No image</div>
-                      )}
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="space-y-3">
-                      <h3
-                        className="text-xl font-bold"
-                        style={{ fontFamily: "'Playfair Display', serif" }}
-                      >
-                        {product.name}
-                      </h3>
-
-                      {product.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {product.description}
-                        </p>
-                      )}
-
-                      {/* Size Selection */}
-                      {variants.length > 0 ? (
-                        <div className="space-y-2 pt-2">
-                          <p className="text-xs font-semibold text-muted-foreground">Select Size:</p>
-                          <div className="flex gap-2">
-                            {variants.map((variant) => (
-                              <button
-                                key={variant.id}
-                                onClick={() => handleSizeSelect(product.id, variant.size)}
-                                className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
-                                  selectedSize === variant.size
-                                    ? "bg-accent text-white"
-                                    : "bg-secondary text-foreground hover:bg-secondary/80"
-                                }`}
-                              >
-                                {variant.size}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <p className="text-xs text-muted-foreground">No sizes available</p>
-                      )}
-
-                      {/* Quantity Selector */}
-                      <div className="space-y-2 pt-2">
-                        <p className="text-xs font-semibold text-muted-foreground">Quantity:</p>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleQuantityChange(product.id, quantity - 1)}
-                            className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
-                          >
-                            −
-                          </button>
-                          <span className="px-4 py-1 bg-secondary/50 rounded text-sm font-semibold w-12 text-center">
-                            {quantity}
-                          </span>
-                          <button
-                            onClick={() => handleQuantityChange(product.id, quantity + 1)}
-                            className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Price Display */}
-                      <div className="bg-accent/10 rounded-lg p-3 mb-3">
-                        <p className="text-xs font-semibold text-muted-foreground mb-1">
-                          Price ({selectedSize || "Select size"})
-                        </p>
-                        <p className="text-3xl font-bold text-accent">
-                          {selectedVariant ? `${selectedVariant.price} DH` : "—"}
-                        </p>
-                      </div>
-
-                      {/* Free Delivery */}
-                      <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block mb-3">
-                        🚚 Livraison Gratuite
-                      </div>
-
-                      {/* Add to Cart Button */}
-                      <button
-                        onClick={() => handleAddToCart(product, selectedSize, selectedVariant)}
-                        className="w-full px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300 font-semibold rounded"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
+              products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  selectedSize={selectedSizes[product.id] || ""}
+                  quantity={quantities[product.id] || 1}
+                  onSizeSelect={handleSizeSelect}
+                  onQuantityChange={handleQuantityChange}
+                  onAddToCart={handleAddToCart}
+                />
+              ))
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">No products available in this category</p>
@@ -313,6 +176,136 @@ export default function Products() {
             )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({
+  product,
+  selectedSize,
+  quantity,
+  onSizeSelect,
+  onQuantityChange,
+  onAddToCart,
+}: {
+  product: any;
+  selectedSize: string;
+  quantity: number;
+  onSizeSelect: (productId: number, size: string) => void;
+  onQuantityChange: (productId: number, quantity: number) => void;
+  onAddToCart: (product: any, size: string, variant: any) => void;
+}) {
+  // Fetch variants for this specific product using the hook
+  const { data: variants = [], isLoading: variantsLoading } = trpc.products.variants.useQuery(
+    { productId: product.id },
+    { enabled: !!product.id }
+  );
+
+  // Auto-select first size if not already selected
+  const effectiveSelectedSize = selectedSize || (variants.length > 0 ? variants[0].size : "");
+  const selectedVariant = variants.find((v) => v.size === effectiveSelectedSize);
+
+  return (
+    <div className="group cursor-pointer transition-all duration-300 hover:opacity-80">
+      {/* Product Image */}
+      <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-muted-foreground">No image</div>
+        )}
+      </div>
+
+      {/* Product Info */}
+      <div className="space-y-3">
+        <h3
+          className="text-xl font-bold"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          {product.name}
+        </h3>
+
+        {product.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {product.description}
+          </p>
+        )}
+
+        {/* Size Selection */}
+        {variantsLoading ? (
+          <p className="text-xs text-muted-foreground">Loading sizes...</p>
+        ) : variants.length > 0 ? (
+          <div className="space-y-2 pt-2">
+            <p className="text-xs font-semibold text-muted-foreground">Select Size:</p>
+            <div className="flex gap-2">
+              {variants.map((variant) => (
+                <button
+                  key={variant.id}
+                  onClick={() => onSizeSelect(product.id, variant.size)}
+                  className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
+                    effectiveSelectedSize === variant.size
+                      ? "bg-accent text-white"
+                      : "bg-secondary text-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  {variant.size}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">No sizes available</p>
+        )}
+
+        {/* Quantity Selector */}
+        <div className="space-y-2 pt-2">
+          <p className="text-xs font-semibold text-muted-foreground">Quantity:</p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onQuantityChange(product.id, quantity - 1)}
+              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+            >
+              −
+            </button>
+            <span className="px-4 py-1 bg-secondary/50 rounded text-sm font-semibold w-12 text-center">
+              {quantity}
+            </span>
+            <button
+              onClick={() => onQuantityChange(product.id, quantity + 1)}
+              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* Price Display */}
+        <div className="bg-accent/10 rounded-lg p-3 mb-3">
+          <p className="text-xs font-semibold text-muted-foreground mb-1">
+            Price ({effectiveSelectedSize || "Select size"})
+          </p>
+          <p className="text-3xl font-bold text-accent">
+            {selectedVariant ? `${selectedVariant.price} DH` : "—"}
+          </p>
+        </div>
+
+        {/* Free Delivery */}
+        <div className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded inline-block mb-3">
+          🚚 Livraison Gratuite
+        </div>
+
+        {/* Add to Cart Button */}
+        <button
+          onClick={() => onAddToCart(product, effectiveSelectedSize, selectedVariant)}
+          className="w-full px-6 py-2 bg-accent text-white hover:bg-accent/90 transition-all duration-300 font-semibold rounded"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );
