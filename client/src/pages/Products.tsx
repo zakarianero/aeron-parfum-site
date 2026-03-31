@@ -10,9 +10,9 @@ export default function Products() {
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
   const [allVariants, setAllVariants] = useState<{ [key: number]: any[] }>({});
-  const [isInitialized, setIsInitialized] = useState(false);
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
+  const utils = trpc.useUtils();
 
   const { data: products, isLoading } = trpc.products.byCategory.useQuery(
     { category: activeCategory },
@@ -25,7 +25,6 @@ export default function Products() {
       if (!products || products.length === 0) {
         setAllVariants({});
         setSelectedSizes({});
-        setIsInitialized(true);
         return;
       }
 
@@ -34,19 +33,12 @@ export default function Products() {
 
       for (const product of products) {
         try {
-          const response = await fetch(
-            `/api/trpc/products.variants?input=${encodeURIComponent(
-              JSON.stringify({ productId: product.id })
-            )}`
-          );
-          const data = await response.json();
-          
-          // Properly parse the tRPC response
-          const variants = data.result?.data || [];
+          // Use the utils to fetch data directly
+          const variants = await utils.products.variants.fetch({ productId: product.id });
           variantsMap[product.id] = Array.isArray(variants) ? variants : [];
           
           // Auto-select first size for each product
-          if (variants.length > 0) {
+          if (variants && variants.length > 0) {
             newSelectedSizes[product.id] = variants[0].size;
           }
         } catch (error) {
@@ -57,11 +49,10 @@ export default function Products() {
 
       setAllVariants(variantsMap);
       setSelectedSizes(newSelectedSizes);
-      setIsInitialized(true);
     };
 
     fetchAllVariants();
-  }, [products]);
+  }, [products, utils]);
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -199,7 +190,7 @@ export default function Products() {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {isLoading || !isInitialized ? (
+            {isLoading ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
