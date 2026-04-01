@@ -21,7 +21,6 @@ export async function syncOrderToSheety(orderData: {
         "customer number": orderData.customerNumber || '',
         "prixcommand": parseFloat(orderData.totalPrice),
         "date": orderData.date,
-        "order number": orderData.orderNumber,
       }
     };
 

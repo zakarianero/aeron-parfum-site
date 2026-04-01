@@ -32,7 +32,6 @@ describe('Sheety Integration', () => {
         "customer number": "0612345678",
         "prixcommand": 100,
         "date": new Date().toISOString().split('T')[0],
-        "order number": "TEST-001",
       }
     };
 
