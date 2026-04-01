@@ -100,3 +100,42 @@ export const newsletterSubscribers = mysqlTable("newsletterSubscribers", {
 
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
+
+/**
+ * Orders table for customer purchases
+ */
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(), // e.g., "ORD-20260331-001"
+  totalPrice: decimal("totalPrice", { precision: 10, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "shipped", "delivered", "cancelled"]).default("pending").notNull(),
+  shippingAddress: text("shippingAddress"),
+  shippingCity: varchar("shippingCity", { length: 100 }),
+  shippingPostalCode: varchar("shippingPostalCode", { length: 20 }),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+/**
+ * Order items table for individual products in orders
+ */
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull().references(() => orders.id, { onDelete: "cascade" }),
+  productId: int("productId").notNull().references(() => products.id, { onDelete: "restrict" }),
+  productName: varchar("productName", { length: 255 }).notNull(),
+  size: varchar("size", { length: 50 }).notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  quantity: int("quantity").notNull().default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;

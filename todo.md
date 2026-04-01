@@ -34,3 +34,14 @@
 - [x] Build products page with category tabs/filters
 - [x] Display products organized by gender category
 - [x] Add category selection in admin product creation
+
+
+## Order Management System - Completed
+- [x] Create orders and order_items database tables
+- [x] Build tRPC procedures for order operations (create, list, get, update status)
+- [x] Implement customer order history page (/orders)
+- [x] Implement order tracking page (/track-order)
+- [x] Build admin orders dashboard (/admin/orders)
+- [x] Add order status tracking (pending, processing, shipped, delivered)
+- [x] Integrate Sheety Google Sheets syncing for order tracking
+- [ ] Integrate checkout with order creation (connect Cart to create order)

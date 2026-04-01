@@ -43,6 +43,13 @@
       "when": 1774786858956,
       "tag": "0005_clear_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1775072892091,
+      "tag": "0006_happy_toro",
+      "breakpoints": true
     }
   ]
 }

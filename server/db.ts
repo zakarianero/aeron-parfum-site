@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, reviews, newsletterSubscribers, productVariants, InsertProduct, InsertReview, InsertNewsletterSubscriber, InsertProductVariant } from "../drizzle/schema";
+import { InsertUser, users, products, reviews, newsletterSubscribers, productVariants, orders, orderItems, InsertProduct, InsertReview, InsertNewsletterSubscriber, InsertProductVariant, InsertOrder, InsertOrderItem } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -179,5 +179,82 @@ export async function createProductVariant(variant: InsertProductVariant) {
   } catch (error) {
     console.error("[Database] Failed to create variant:", error);
     throw error;
+  }
+}
+
+// Order queries
+export async function createOrder(order: InsertOrder, items: InsertOrderItem[]) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create order: database not available");
+    return null;
+  }
+  try {
+    const result = await db.insert(orders).values(order);
+    const orderId = (result as any).insertId || result[0];
+    
+    if (items.length > 0) {
+      const itemsWithOrderId = items.map(item => ({
+        orderId: orderId as number,
+        productId: item.productId,
+        productName: item.productName,
+        size: item.size,
+        price: item.price,
+        quantity: item.quantity || 1,
+      }));
+      await db.insert(orderItems).values(itemsWithOrderId);
+    }
+    
+    return orderId;
+  } catch (error) {
+    console.error("[Database] Failed to create order:", error);
+    throw error;
+  }
+}
+
+export async function getOrdersByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(orders.createdAt);
+}
+
+export async function getOrderById(orderId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getOrderByNumber(orderNumber: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getOrderItemsByOrderId(orderId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+}
+
+export async function getAllOrders() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(orders).orderBy(orders.createdAt);
+}
+
+export async function updateOrderStatus(orderId: number, status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled') {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update order: database not available");
+    return false;
+  }
+  try {
+    await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, orderId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update order status:", error);
+    return false;
   }
 }
