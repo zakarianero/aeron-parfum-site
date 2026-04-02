@@ -14,6 +14,7 @@ export default function Cart() {
     zipCode: "",
   });
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -23,22 +24,57 @@ export default function Cart() {
     }));
   };
 
-  const handleCheckout = () => {
-    if (!checkoutData.fullName || !checkoutData.email || !checkoutData.phone || !checkoutData.address) {
+  const handleCheckout = async () => {
+    if (!checkoutData.fullName || !checkoutData.email || !checkoutData.phone || !checkoutData.address || !checkoutData.city) {
       alert("Please fill in all required fields");
       return;
     }
-    
-    // Here you would typically send the order to your backend
-    console.log("Order submitted:", {
-      items,
-      totalPrice: getTotalPrice(),
-      customerInfo: checkoutData,
-    });
-    
-    alert("Order placed successfully! Thank you for your purchase.");
-    clearCart();
-    setLocation("/");
+
+    setIsLoading(true);
+    try {
+      const sheetyUrl = 'https://api.sheety.co/0a4f022d0b26d3cd8e33270b678b5284/orders/sheet1';
+      
+      const body = {
+        sheet1: {
+          "customer name": checkoutData.fullName,
+          "customer number": checkoutData.phone,
+          "prixcommand": parseFloat(getTotalPrice().toFixed(2)),
+          "date": new Date().toISOString().split('T')[0],
+          "city": checkoutData.city,
+          "ordered from": "Website",
+        }
+      };
+
+      const response = await fetch(sheetyUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit order');
+      }
+
+      alert("Order placed successfully! Thank you for your purchase.");
+      clearCart();
+      setCheckoutData({
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        zipCode: "",
+      });
+      setIsCheckoutOpen(false);
+      setLocation("/");
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Error placing order. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -246,7 +282,7 @@ export default function Cart() {
                         <input
                           type="text"
                           name="city"
-                          placeholder="City"
+                          placeholder="City *"
                           value={checkoutData.city}
                           onChange={handleInputChange}
                           className="px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
@@ -265,9 +301,10 @@ export default function Cart() {
 
                     <button
                       onClick={handleCheckout}
-                      className="w-full px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 rounded font-semibold"
+                      disabled={isLoading}
+                      className="w-full px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 rounded font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Place Order
+                      {isLoading ? "Placing Order..." : "Place Order"}
                     </button>
 
                     <p className="text-xs text-muted-foreground text-center">
