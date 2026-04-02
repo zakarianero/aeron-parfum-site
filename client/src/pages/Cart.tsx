@@ -7,13 +7,9 @@ export default function Cart() {
   const [, setLocation] = useLocation();
   const [checkoutData, setCheckoutData] = useState({
     fullName: "",
-    email: "",
     phone: "",
-    address: "",
     city: "",
-    zipCode: "",
   });
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -25,7 +21,7 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
-    if (!checkoutData.fullName || !checkoutData.email || !checkoutData.phone || !checkoutData.address || !checkoutData.city) {
+    if (!checkoutData.fullName || !checkoutData.phone || !checkoutData.city) {
       alert("Please fill in all required fields");
       return;
     }
@@ -60,13 +56,9 @@ export default function Cart() {
       clearCart();
       setCheckoutData({
         fullName: "",
-        email: "",
         phone: "",
-        address: "",
         city: "",
-        zipCode: "",
       });
-      setIsCheckoutOpen(false);
       setLocation("/");
     } catch (error) {
       console.error("Error placing order:", error);
@@ -105,7 +97,7 @@ export default function Cart() {
               Shopping Cart
             </h1>
             <p className="text-lg text-muted-foreground">
-              Review your selected items and proceed to checkout
+              Review your selected items and complete your order
             </p>
           </div>
 
@@ -218,13 +210,6 @@ export default function Cart() {
                     <span>Total:</span>
                     <span className="text-accent">{getTotalPrice().toFixed(2)} DH</span>
                   </div>
-
-                  <button
-                    onClick={() => setIsCheckoutOpen(!isCheckoutOpen)}
-                    className="w-full px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 rounded font-semibold"
-                  >
-                    {isCheckoutOpen ? "Hide Checkout" : "Proceed to Checkout"}
-                  </button>
                 </div>
 
                 {/* Morocco Only Notice */}
@@ -235,82 +220,51 @@ export default function Cart() {
                   </p>
                 </div>
 
-                {/* Checkout Form */}
-                {isCheckoutOpen && (
-                  <div className="border border-border rounded-lg p-6 space-y-4 bg-secondary/5">
-                    <h2 className="text-lg font-bold">Delivery Information</h2>
+                {/* Checkout Form - Always Visible */}
+                <div className="border border-border rounded-lg p-6 space-y-4 bg-secondary/5">
+                  <h2 className="text-lg font-bold">Delivery Information</h2>
 
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder="Full Name *"
-                        value={checkoutData.fullName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                      />
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      name="fullName"
+                      placeholder="Full Name *"
+                      value={checkoutData.fullName}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
+                    />
 
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Email *"
-                        value={checkoutData.email}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                      />
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Phone Number *"
+                      value={checkoutData.phone}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
+                    />
 
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Phone Number *"
-                        value={checkoutData.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                      />
-
-                      <textarea
-                        name="address"
-                        placeholder="Delivery Address *"
-                        value={checkoutData.address}
-                        onChange={handleInputChange}
-                        rows={3}
-                        className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent resize-none"
-                      />
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <input
-                          type="text"
-                          name="city"
-                          placeholder="City *"
-                          value={checkoutData.city}
-                          onChange={handleInputChange}
-                          className="px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                        />
-
-                        <input
-                          type="text"
-                          name="zipCode"
-                          placeholder="Zip Code"
-                          value={checkoutData.zipCode}
-                          onChange={handleInputChange}
-                          className="px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={handleCheckout}
-                      disabled={isLoading}
-                      className="w-full px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 rounded font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isLoading ? "Placing Order..." : "Place Order"}
-                    </button>
-
-                    <p className="text-xs text-muted-foreground text-center">
-                      * Required fields
-                    </p>
+                    <input
+                      type="text"
+                      name="city"
+                      placeholder="City *"
+                      value={checkoutData.city}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-border rounded bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
+                    />
                   </div>
-                )}
+
+                  <button
+                    onClick={handleCheckout}
+                    disabled={isLoading}
+                    className="w-full px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 rounded font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? "Placing Order..." : "Place Order"}
+                  </button>
+
+                  <p className="text-xs text-muted-foreground text-center">
+                    * Required fields
+                  </p>
+                </div>
               </div>
             </div>
           )}
