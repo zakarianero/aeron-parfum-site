@@ -36,11 +36,11 @@ export default function Cart() {
       
       const body = {
         sheet1: {
-          "customer name": checkoutData.fullName,
-          "customer number": checkoutData.phone,
+          "custmername": checkoutData.fullName,
+          "customernumber": checkoutData.phone,
           "prix": parseFloat(getTotalPrice().toFixed(2)),
           "date": new Date().toISOString().split('T')[0],
-          "city orderd from": checkoutData.city + " - Website",
+          "city": checkoutData.city,
         }
       };
 
