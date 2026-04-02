@@ -38,10 +38,9 @@ export default function Cart() {
         sheet1: {
           "customer name": checkoutData.fullName,
           "customer number": checkoutData.phone,
-          "prixcommand": parseFloat(getTotalPrice().toFixed(2)),
+          "prix": parseFloat(getTotalPrice().toFixed(2)),
           "date": new Date().toISOString().split('T')[0],
-          "city": checkoutData.city,
-          "ordered from": "Website",
+          "city orderd from": checkoutData.city + " - Website",
         }
       };
 
