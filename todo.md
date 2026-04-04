@@ -63,3 +63,4 @@
 - [x] Update About page to use new Navigation component
 - [x] Update Contact page to use new Navigation component
 - [x] Test search icon visibility on all pages
+- [x] Replace search emoji icon with "Search" text for luxury aesthetic

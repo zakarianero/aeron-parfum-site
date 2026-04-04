@@ -63,9 +63,9 @@ export default function Navigation({ currentPage }: NavigationProps) {
             />
             <button
               onClick={handleSearchClick}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-accent transition-colors"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-accent transition-colors text-xs font-semibold"
             >
-              🔍
+              Search
             </button>
           </div>
 
