@@ -9,6 +9,7 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState<Category>("womens");
   const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [searchQuery, setSearchQuery] = useState("");
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
 
@@ -16,6 +17,12 @@ export default function Products() {
     { category: activeCategory },
     { enabled: true }
   );
+
+  // Filter products by search query
+  const filteredProducts = products?.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -85,6 +92,16 @@ export default function Products() {
             >
               Shop
             </a>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search perfumes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="px-4 py-2 bg-background border border-border rounded text-sm focus:outline-none focus:border-accent"
+              />
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">🔍</span>
+            </div>
             <button
               onClick={() => setLocation("/cart")}
               className="hover:text-accent transition-colors duration-300 font-semibold"
@@ -157,8 +174,8 @@ export default function Products() {
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
-            ) : products && products.length > 0 ? (
-              products.map((product) => (
+            ) : filteredProducts && filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -196,6 +213,8 @@ function ProductCard({
   onQuantityChange: (productId: number, quantity: number) => void;
   onAddToCart: (product: any, size: string, variant: any) => void;
 }) {
+  const [, setLocation] = useLocation();
+  
   // Fetch variants for this specific product using the hook
   const { data: variants = [], isLoading: variantsLoading } = trpc.products.variants.useQuery(
     { productId: product.id },
@@ -207,9 +226,9 @@ function ProductCard({
   const selectedVariant = variants.find((v) => v.size === effectiveSelectedSize);
 
   return (
-    <div className="group cursor-pointer transition-all duration-300 hover:opacity-80">
+    <div className="group cursor-pointer transition-all duration-300 hover:opacity-80" onClick={() => setLocation(`/product/${product.id}`)}>
       {/* Product Image */}
-      <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+      <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center hover:opacity-80 transition-opacity">
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
@@ -224,7 +243,7 @@ function ProductCard({
       {/* Product Info */}
       <div className="space-y-3">
         <h3
-          className="text-xl font-bold"
+          className="text-xl font-bold hover:text-accent transition-colors"
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
           {product.name}
