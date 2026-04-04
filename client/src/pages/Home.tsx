@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import Navigation from "@/components/Navigation";
 
 /**
  * AERON PARFUM Landing Page
@@ -13,7 +14,6 @@ import NewsletterSignup from "@/components/NewsletterSignup";
  */
 
 export default function Home() {
-  const { user, loading, error, isAuthenticated, logout } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -23,38 +23,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container py-4 flex justify-between items-center">
-          <a href="/" className="text-2xl font-bold text-accent hover:opacity-80 transition-opacity duration-300" style={{ fontFamily: "'Playfair Display', serif" }}>
-            AERON
-          </a>
-          <div className="flex gap-8 text-sm items-center">
-            <a href="/products" className="hover:text-accent transition-colors duration-300">
-              Shop
-            </a>
-            <a href="#product" className="hover:text-accent transition-colors duration-300">
-              Product
-            </a>
-            <a href="#about" className="hover:text-accent transition-colors duration-300">
-              About
-            </a>
-            <a href="#contact" className="hover:text-accent transition-colors duration-300">
-              Contact
-            </a>
-            {isAuthenticated && user && (
-              <div className="flex gap-4 items-center">
-                <span className="text-xs text-muted-foreground">{user.name}</span>
-                <button
-                  onClick={() => logout()}
-                  className="text-xs px-3 py-1 border border-accent text-accent hover:bg-accent hover:text-white transition-all"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navigation currentPage="home" />
 
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-4 min-h-screen flex items-center justify-center">

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
 import { useLocation } from "wouter";
+import Navigation from "@/components/Navigation";
 
 type Category = "womens" | "mens" | "unisex";
 
@@ -70,47 +71,12 @@ export default function Products() {
     setLocation("/cart");
   };
 
+
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container py-4 flex justify-between items-center">
-          <a
-            href="/"
-            className="text-2xl font-bold text-accent hover:opacity-80 transition-opacity duration-300"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            AERON
-          </a>
-          <div className="flex gap-8 text-sm items-center">
-            <a href="/" className="hover:text-accent transition-colors duration-300">
-              Home
-            </a>
-            <a
-              href="/products"
-              className="hover:text-accent transition-colors duration-300 font-semibold text-accent"
-            >
-              Shop
-            </a>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search perfumes..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="px-4 py-2 bg-background border border-border rounded text-sm focus:outline-none focus:border-accent"
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">🔍</span>
-            </div>
-            <button
-              onClick={() => setLocation("/cart")}
-              className="hover:text-accent transition-colors duration-300 font-semibold"
-            >
-              🛒 Cart
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navigation currentPage="shop" />
 
       {/* Main Content */}
       <div className="pt-32 pb-16 px-4">
@@ -225,10 +191,18 @@ function ProductCard({
   const effectiveSelectedSize = selectedSize || (variants.length > 0 ? variants[0].size : "");
   const selectedVariant = variants.find((v) => v.size === effectiveSelectedSize);
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Only navigate if clicking on the image or title area, not on buttons
+    if ((e.target as HTMLElement).closest('button')) {
+      return;
+    }
+    setLocation(`/product/${product.id}`);
+  };
+
   return (
-    <div className="group cursor-pointer transition-all duration-300 hover:opacity-80" onClick={() => setLocation(`/product/${product.id}`)}>
+    <div className="group cursor-pointer transition-all duration-300 hover:opacity-80" onClick={handleCardClick}>
       {/* Product Image */}
-      <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center hover:opacity-80 transition-opacity">
+      <div className="mb-6 bg-secondary/10 rounded-lg overflow-hidden aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer" onClick={() => setLocation(`/product/${product.id}`)}>
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
@@ -243,8 +217,9 @@ function ProductCard({
       {/* Product Info */}
       <div className="space-y-3">
         <h3
-          className="text-xl font-bold hover:text-accent transition-colors"
+          className="text-xl font-bold hover:text-accent transition-colors cursor-pointer"
           style={{ fontFamily: "'Playfair Display', serif" }}
+          onClick={() => setLocation(`/product/${product.id}`)}
         >
           {product.name}
         </h3>

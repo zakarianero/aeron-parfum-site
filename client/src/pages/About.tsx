@@ -1,22 +1,12 @@
 import { useLocation } from "wouter";
+import Navigation from "@/components/Navigation";
 
 export default function About() {
-  const [, setLocation] = useLocation();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container py-4 flex justify-between items-center">
-          <a href="/" className="text-2xl font-bold text-accent hover:opacity-80 transition-opacity duration-300" style={{ fontFamily: "'Playfair Display', serif" }}>AERON</a>
-          <div className="flex gap-8 text-sm items-center">
-            <a href="/" className="hover:text-accent transition-colors duration-300">Home</a>
-            <a href="/products" className="hover:text-accent transition-colors duration-300">Shop</a>
-            <a href="/about" className="hover:text-accent transition-colors duration-300 font-semibold text-accent">About</a>
-            <button onClick={() => setLocation("/cart")} className="hover:text-accent transition-colors duration-300">Cart</button>
-          </div>
-        </div>
-      </nav>
-      <div className="pt-24 pb-16 px-4">
+      <Navigation currentPage="about" />
+      <div className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto space-y-12">
           <div className="text-center space-y-4">
             <h1 className="text-5xl md:text-6xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>About AERON</h1>
@@ -50,7 +40,7 @@ export default function About() {
             </section>
           </div>
           <div className="text-center pt-8">
-            <button onClick={() => setLocation("/products")} className="px-8 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 font-semibold">Explore Our Collection</button>
+            <a href="/products" className="inline-block px-8 py-3 bg-accent text-white hover:bg-accent/90 transition-all duration-300 font-semibold">Explore Our Collection</a>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
+import Navigation from "@/components/Navigation";
 
 export default function ProductDetail() {
   const params = useParams<{ id?: string }>();
@@ -89,34 +90,10 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container py-4 flex justify-between items-center">
-          <a
-            href="/"
-            className="text-2xl font-bold text-accent hover:opacity-80 transition-opacity duration-300"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            AERON
-          </a>
-          <div className="flex gap-8 text-sm items-center">
-            <a href="/" className="hover:text-accent transition-colors duration-300">
-              Home
-            </a>
-            <a href="/products" className="hover:text-accent transition-colors duration-300">
-              Shop
-            </a>
-            <button
-              onClick={() => setLocation("/cart")}
-              className="hover:text-accent transition-colors duration-300 font-semibold"
-            >
-              🛒 Cart
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navigation currentPage="product" />
 
       {/* Product Detail */}
-      <div className="pt-24 pb-16 px-4">
+      <div className="pt-32 pb-16 px-4">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => setLocation("/products")}
