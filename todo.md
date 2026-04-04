@@ -77,3 +77,8 @@
 - [x] Add Dior Homme Intense to Men's category
 - [x] Add Stronger With You Absolutely to Men's category
 - [x] Test new perfumes display on Shop page
+
+
+## Update Khamra Category - Completed
+- [x] Move Khamra from Men's to Unisex category
+- [x] Verify Khamra displays in Unisex category
