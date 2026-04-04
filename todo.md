@@ -64,3 +64,16 @@
 - [x] Update Contact page to use new Navigation component
 - [x] Test search icon visibility on all pages
 - [x] Replace search emoji icon with "Search" text for luxury aesthetic
+
+
+## Add New Perfumes - Completed
+- [x] Add Ultra Male (Jean Paul Gaultier) to Men's category
+- [x] Add Bleu de Chanel to Men's category
+- [x] Add Y Eau de Parfum to Men's category
+- [x] Add Tom Ford Métallique to Unisex category
+- [x] Add Khamra to Men's category
+- [x] Add Imagination to Men's category
+- [x] Add Bianco Latte to Unisex category
+- [x] Add Dior Homme Intense to Men's category
+- [x] Add Stronger With You Absolutely to Men's category
+- [x] Test new perfumes display on Shop page
