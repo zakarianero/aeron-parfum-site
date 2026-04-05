@@ -12,28 +12,57 @@ export default function Products() {
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
   const [searchQuery, setSearchQuery] = useState("");
   const { addItem } = useCart();
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
-  // Extract search query from URL parameters
+  // Extract search query from URL parameters using window.location.search
   useEffect(() => {
-    const params = new URLSearchParams(location.split('?')[1] || '');
-    const search = params.get('search') || '';
-    setSearchQuery(search);
-  }, [location]);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const search = params.get('search') || '';
+      setSearchQuery(decodeURIComponent(search));
+    } catch (error) {
+      console.error('Error parsing search query:', error);
+      setSearchQuery('');
+    }
+  }, []);
 
-  const { data: products, isLoading } = trpc.products.byCategory.useQuery(
-    { category: activeCategory },
-    { enabled: true }
+  // When there's a search query, fetch from all categories
+  // Otherwise, fetch from active category only
+  const shouldFetchAll = searchQuery.length > 0;
+
+  const { data: womensProducts } = trpc.products.byCategory.useQuery(
+    { category: "womens" },
+    { enabled: shouldFetchAll }
   );
 
-  // Filter products by search query and category
-  const filteredProducts = products?.filter((product) => {
+  const { data: mensProducts } = trpc.products.byCategory.useQuery(
+    { category: "mens" },
+    { enabled: shouldFetchAll }
+  );
+
+  const { data: unisexProducts } = trpc.products.byCategory.useQuery(
+    { category: "unisex" },
+    { enabled: shouldFetchAll }
+  );
+
+  const { data: activeProducts, isLoading } = trpc.products.byCategory.useQuery(
+    { category: activeCategory },
+    { enabled: !shouldFetchAll }
+  );
+
+  // Combine all products if searching, otherwise use active category products
+  const allProducts = shouldFetchAll
+    ? [...(womensProducts || []), ...(mensProducts || []), ...(unisexProducts || [])]
+    : (activeProducts || []);
+
+  // Filter products by search query
+  const filteredProducts = allProducts.filter((product) => {
     if (!searchQuery) return true; // Show all if no search query
     return (
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }) || [];
+  });
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -135,43 +164,45 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex justify-center gap-6 mb-12 flex-wrap">
-            <button
-              onClick={() => setActiveCategory("womens")}
-              className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
-                activeCategory === "womens"
-                  ? "text-accent border-b-2 border-accent"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Women's
-            </button>
-            <button
-              onClick={() => setActiveCategory("mens")}
-              className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
-                activeCategory === "mens"
-                  ? "text-accent border-b-2 border-accent"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Men's
-            </button>
-            <button
-              onClick={() => setActiveCategory("unisex")}
-              className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
-                activeCategory === "unisex"
-                  ? "text-accent border-b-2 border-accent"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Unisex
-            </button>
-          </div>
+          {/* Category Tabs - Hidden when searching */}
+          {!searchQuery && (
+            <div className="flex justify-center gap-6 mb-12 flex-wrap">
+              <button
+                onClick={() => setActiveCategory("womens")}
+                className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
+                  activeCategory === "womens"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Women's
+              </button>
+              <button
+                onClick={() => setActiveCategory("mens")}
+                className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
+                  activeCategory === "mens"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Men's
+              </button>
+              <button
+                onClick={() => setActiveCategory("unisex")}
+                className={`px-8 py-3 text-lg font-semibold transition-all duration-300 ${
+                  activeCategory === "unisex"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Unisex
+              </button>
+            </div>
+          )}
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {isLoading ? (
+            {isLoading && !shouldFetchAll ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">Loading products...</p>
               </div>

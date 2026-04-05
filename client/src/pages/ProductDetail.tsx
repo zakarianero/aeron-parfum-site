@@ -32,32 +32,17 @@ export default function ProductDetail() {
   const allProducts = [...(womensProducts || []), ...(mensProducts || []), ...(unisexProducts || [])];
   const product = allProducts.find((p) => p.id === productId);
 
-  // Fetch variants
-  const [variants, setVariants] = useState<any[]>([]);
+  // Fetch variants using tRPC
+  const { data: variants = [] } = trpc.products.variants.useQuery(
+    { productId },
+    { enabled: productId > 0 }
+  );
 
   useEffect(() => {
-    const fetchVariants = async () => {
-      try {
-        const response = await fetch(
-          `/api/trpc/products.variants?input=${encodeURIComponent(
-            JSON.stringify({ productId })
-          )}`
-        );
-        const data = await response.json();
-        const variantsList = data.result?.data || [];
-        setVariants(variantsList);
-        if (variantsList.length > 0) {
-          setSelectedSize(variantsList[0].size);
-        }
-      } catch (error) {
-        console.error("Failed to fetch variants:", error);
-      }
-    };
-
-    if (productId > 0) {
-      fetchVariants();
+    if (variants.length > 0 && !selectedSize) {
+      setSelectedSize(variants[0].size);
     }
-  }, [productId]);
+  }, [variants, selectedSize]);
 
   if (!product) {
     return (
@@ -75,7 +60,10 @@ export default function ProductDetail() {
   const selectedVariant = variants.find((v) => v.size === (selectedSize || ""));
 
   const handleAddToCart = () => {
-    if (!selectedVariant) return;
+    if (!selectedVariant) {
+      alert("Please select a size before adding to cart");
+      return;
+    }
     addItem({
       productId: product.id,
       productName: product.name,

@@ -95,3 +95,19 @@
 - [x] Debug search filtering logic
 - [x] Fix search issue (URL parameters + Products component integration)
 - [x] Verify search works correctly
+
+
+## Bug Fix: Search from Navigation Not Filtering - Completed
+- [x] Fix URL parsing in Products component to read search query
+- [x] Verify search filters products when navigating from Navigation bar
+- [x] Test search works from all pages (Home, About, Contact)
+
+## Bug Fix: Add to Cart Button Not Working - Completed
+- [x] Debug ProductDetail page Add to Cart button
+- [x] Fix Add to Cart functionality
+- [x] Test Add to Cart on product detail page
+
+## Bug Fix: Search Across All Categories - Completed
+- [x] Update Products component to search across all categories when search query is present
+- [x] Test search from Navigation bar shows matching products from all categories
+- [x] Verify search works correctly on Shop page

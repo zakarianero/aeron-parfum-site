@@ -13,6 +13,8 @@ export default function Navigation({ currentPage }: NavigationProps) {
     // Navigate to products page with search query as URL parameter
     if (searchQuery.trim()) {
       setLocation(`/products?search=${encodeURIComponent(searchQuery)}`);
+      // Clear the search input after navigation
+      setSearchQuery("");
     } else {
       setLocation("/products");
     }
@@ -63,6 +65,7 @@ export default function Navigation({ currentPage }: NavigationProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleSearchKeyPress}
               className="px-3 py-2 bg-background border border-border rounded text-sm focus:outline-none focus:border-accent w-32"
+              autoComplete="off"
             />
             <button
               onClick={handleSearchClick}
