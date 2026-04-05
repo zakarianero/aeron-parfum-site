@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
 import { useLocation } from "wouter";
@@ -12,18 +12,28 @@ export default function Products() {
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
   const [searchQuery, setSearchQuery] = useState("");
   const { addItem } = useCart();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+
+  // Extract search query from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.split('?')[1] || '');
+    const search = params.get('search') || '';
+    setSearchQuery(search);
+  }, [location]);
 
   const { data: products, isLoading } = trpc.products.byCategory.useQuery(
     { category: activeCategory },
     { enabled: true }
   );
 
-  // Filter products by search query
-  const filteredProducts = products?.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  // Filter products by search query and category
+  const filteredProducts = products?.filter((product) => {
+    if (!searchQuery) return true; // Show all if no search query
+    return (
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }) || [];
 
   const handleSizeSelect = (productId: number, size: string) => {
     setSelectedSizes((prev) => ({
@@ -71,6 +81,18 @@ export default function Products() {
     setLocation("/cart");
   };
 
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    // Update URL with search query
+    if (query.trim()) {
+      setLocation(`/products?search=${encodeURIComponent(query)}`);
+    } else {
+      setLocation("/products");
+    }
+  };
+
 
 
   return (
@@ -97,6 +119,19 @@ export default function Products() {
               <p className="text-xs text-muted-foreground mt-1">
                 We currently deliver to Morocco only. Free shipping on all orders.
               </p>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="flex justify-center mb-8">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="px-4 py-2 bg-background border border-border rounded text-sm focus:outline-none focus:border-accent w-64"
+              />
             </div>
           </div>
 
@@ -154,7 +189,9 @@ export default function Products() {
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-muted-foreground">No products available in this category</p>
+                <p className="text-muted-foreground">
+                  {searchQuery ? `No products found matching "${searchQuery}"` : "No products available in this category"}
+                </p>
               </div>
             )}
           </div>

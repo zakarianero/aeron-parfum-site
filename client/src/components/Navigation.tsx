@@ -10,14 +10,17 @@ export default function Navigation({ currentPage }: NavigationProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchClick = () => {
-    // Navigate to products page with search query
-    setLocation("/products");
-    // Clear search after navigation
-    setTimeout(() => setSearchQuery(""), 100);
+    // Navigate to products page with search query as URL parameter
+    if (searchQuery.trim()) {
+      setLocation(`/products?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      setLocation("/products");
+    }
   };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSearchClick();
     }
   };

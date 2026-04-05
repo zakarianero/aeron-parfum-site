@@ -82,3 +82,16 @@
 ## Update Khamra Category - Completed
 - [x] Move Khamra from Men's to Unisex category
 - [x] Verify Khamra displays in Unisex category
+
+
+## Update Black Opium Product Image - Completed
+- [x] Upload new Black Opium image to CDN
+- [x] Update Black Opium product with new image URL
+- [x] Verify new image displays on Shop page
+
+
+## Bug Fix: Search Not Working - Completed
+- [x] Test search functionality
+- [x] Debug search filtering logic
+- [x] Fix search issue (URL parameters + Products component integration)
+- [x] Verify search works correctly
