@@ -111,3 +111,15 @@
 - [x] Update Products component to search across all categories when search query is present
 - [x] Test search from Navigation bar shows matching products from all categories
 - [x] Verify search works correctly on Shop page
+
+
+## Update All Product Prices - Completed
+- [x] Update all product variant prices to 60 DH (30ml) and 80 DH (50ml)
+- [x] Verify pricing on Shop page
+- [x] Verify pricing on Product Detail pages
+
+
+## Update Baccarat Rouge Product Image - Completed
+- [x] Upload new Baccarat Rouge image to CDN
+- [x] Update Baccarat Rouge product with new image URL
+- [x] Verify new image displays on Shop page
