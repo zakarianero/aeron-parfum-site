@@ -123,3 +123,10 @@
 - [x] Upload new Baccarat Rouge image to CDN
 - [x] Update Baccarat Rouge product with new image URL
 - [x] Verify new image displays on Shop page
+
+## Update Y Eau de Parfum Product Image and Pricing - Completed
+- [x] Upload Y Eau de Parfum image to CDN
+- [x] Update Y Eau de Parfum product with new image URL
+- [x] Add pricing variants (60 DH for 30ml, 80 DH for 50ml)
+- [x] Verify image and pricing display on Shop page
+- [x] Verify image and pricing display on Product Detail page
